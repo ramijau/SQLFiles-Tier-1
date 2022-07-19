@@ -179,17 +179,45 @@ ORDER By fullname
 
 /* Q12: Find the facilities with their usage by member, but not guests */
 
-
-
-
-
-
-
-
+SELECT f.name,concat(m.firstname,' ',m.surname) as fullname,
+COUNT(f.name) as bookings
+FROM Members AS m
+INNER JOIN Bookings AS b 
+    ON b.memid = m.memid
+INNER JOIN Facilities AS f 
+    ON f.facid = b.facid
+WHERE m.memid>0
+GROUP BY f.name,concat(m.firstname,' ',m.surname)
+ORDER BY f.name,m.surname,m.firstname 
 
 /* Q13: Find the facilities usage by month, but not guests */
 
+SELECT f.name,concat(m.firstname,' ',m.surname) AS fullname,
+COUNT(f.name) AS bookings,
 
+SUM(CASE WHEN month(starttime) = 1 THEN 1 ELSE 0 end) AS Jan,
+SUM(CASE WHEN month(starttime) = 2 THEN 1 ELSE 0 end) AS Feb,
+SUM(CASE WHEN month(starttime) = 3 THEN 1 ELSE 0 end) AS Mar,
+SUM(CASE WHEN month(starttime) = 4 THEN 1 ELSE 0 end) AS Apr,
+SUM(CASE WHEN month(starttime) = 5 THEN 1 ELSE 0 end) AS May,
+SUM(CASE WHEN month(starttime) = 6 THEN 1 ELSE 0 end) AS Jun,
+SUM(CASE WHEN month(starttime) = 7 THEN 1 ELSE 0 end) AS Jul,
+SUM(CASE WHEN month(starttime) = 8 THEN 1 ELSE 0 end) AS Aug,
+SUM(CASE WHEN month(starttime) = 9 THEN 1 ELSE 0 end) AS Sep,
+SUM(CASE WHEN month(starttime) = 10 THEN 1 ELSE 0 end) AS Oct,
+SUM(CASE WHEN month(starttime) = 11 THEN 1 ELSE 0 end) AS Nov,
+SUM(CASE WHEN month(starttime) = 12 THEN 1 ELSE 0 end) AS Decm
+
+FROM Members AS m
+INNER JOIN Bookings AS b 
+	ON b.memid = m.memid
+INNER JOIN Facilities AS f 
+	ON f.facid = bk.facid
+WHERE m.memid>0
+AND year(starttime) = 2012
+
+GROUP BY f.name,concat(m.firstname,' ',m.surname)
+ORDER BY  f.name,m.surname,m.firstname 
 
 
 
